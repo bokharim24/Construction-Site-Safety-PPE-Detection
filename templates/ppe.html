@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-color: #cccccc;
+
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            color: #4a4a4a;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .col {
+            width: 250px;
+            height: 250px;
+            background-color: gray;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            margin: 40px auto;
+            transition: background-color 0.5s ease, transform 0.3s ease;
+            animation: glow 1.5s ease-in-out infinite alternate;
+            position: relative;
+            display: inline-block;
+        }
+
+        .webcam-feed {
+            width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 5px solid rgba(255, 255, 255, 0.5);
+            margin-top: 20px;
+        }
+
+        /* Glow effect for a more futuristic look */
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+            to {
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        /* Smoother hover effect with 3D perspective */
+        .col:hover {
+            transform: scale(1.1) rotateY(10deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compliance with PPE</h1>
+        <!-- This is the div that will change color dynamically -->
+        <div class="col"></div>
+        
+        <!-- Webcam Feed Display -->
+        <div class="webcam-feed">
+            <img src="{{ url_for('video_feed') }}" width="100%" alt="Webcam Feed">
+        </div>
+    </div>
+    
+    <script>
+        // Function to fetch the color dynamically
+        function updateColor() {
+            fetch('/get_color')
+            .then(response => response.json())
+            .then(data => {
+                // Update the background color of the div
+                const colorDiv = document.querySelector('.col');
+                colorDiv.style.backgroundColor = data.color;
+            })
+            .catch(error => console.error('Error fetching color:', error));
+        }
+
+        // Update the color every half a second
+        setInterval(updateColor, 500);
+    </script>
+</body>
+</html>
